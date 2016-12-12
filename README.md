@@ -34,7 +34,7 @@ You should add module to your config:
         'certificate' => [
                     'class' => \usesgraphcrt\certificate\Module::className(),
                     'sourceModels' => [
-                    \\list models for certification
+                    //list models for certification
                     ]
                 ],
     ],
