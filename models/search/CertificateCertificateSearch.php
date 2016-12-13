@@ -1,11 +1,11 @@
 <?php
 
-namespace app\models\search;
+namespace usesgraphcrt\certificate\models\search;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\CertificateCertificate;
+use usesgraphcrt\certificate\models\CertificateCertificate;
 
 /**
  * CertificateCertificateSearch represents the model behind the search form of `app\models\CertificateCertificate`.

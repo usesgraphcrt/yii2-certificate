@@ -6,7 +6,7 @@ namespace usesgraphcrt\certificate;
 class Module extends \yii\base\Module
 {
 
-    public $sourceModels = null;
+    public $targetModelList = null;
 
 
     /**
