@@ -85,9 +85,9 @@ class CertificateController extends Controller
         foreach ($certificateItems as $certificateItem) {
             $target_model = $certificateItem->target_model;
             $target = $target_model::findOne($certificateItem->target_id);
-            $items[] = ['['.$certificateItem->target_model.']['.$target->faq_id.']' =>
+            $items[] = ['['.$certificateItem->target_model.']['.$target->id.']' =>
                 [
-                    'name' => $target->faq_title,
+                    'name' => $target->name,
                     'model' => $certificateItem->target_model,
                     'model_id' => $certificateItem->target_id,
                     'amount' => $certificateItem->amount,

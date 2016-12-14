@@ -24,7 +24,7 @@ $this->registerJs("$('[data-role=add-model]').on('click', function() {
             [
                 'attribute' => 'name',
                 'content' => function($model) {
-                    return $model->faq_title;
+                    return $model->name;
                 }
             ],
             [
@@ -32,8 +32,8 @@ $this->registerJs("$('[data-role=add-model]').on('click', function() {
                 'content' => function ($model) {
                     return '<div class="btn btn-default" 
                         data-role="add-model"
-                        data-target-model-name="'.$model->faq_title.'"
-                        data-target-model-id="'.$model->faq_id.'">
+                        data-target-model-name="'.$model->name.'"
+                        data-target-model-id="'.$model->id.'">
                         Добавить</div>';
                 }
             ]
