@@ -24,6 +24,14 @@ usesgraphcrt.certificate = {
             usesgraphcrt.certificate.deleteTargetItem(delete_url,data,block);
             $(currentBlock).remove();
         });
+
+        $(document).on('change','#certificatecertificate-type', function(){
+            if ($(this).val() == 'sum') {
+                $('[data-role=certificate-type]').text('Сумма');
+            } else if ($(this).val() == 'item') {
+                $('[data-role=certificate-type]').text('Количество использований');
+            }
+        });
     },
 
     getTargetItem: function (targetModelId,targetModel) {
@@ -58,7 +66,7 @@ usesgraphcrt.certificate = {
             .append('<td><label>'+targetModelName +'</label><input type="hidden" data-role="product-model" ' +
                 'name="targetModels[' + targetModel + '][' + targetModelId + ']"' +
                 ' data-name="' + targetModel.replace(/\\/g,'') + targetModelId + '"/></td>')
-            .append('<td><input type="text" data-role="product-model-amount" ' +
+            .append('<td><input class="form-control" placeholder="Количество использований" type="text" data-role="product-model-amount" ' +
                 'name="targetModels[' + targetModel + '][' + targetModelId + ']"' +
                 ' data-name="' + targetModel.replace(/\\/g,'') + targetModelId + '"/></td>')
             .append('<td><span class="btn glyphicon glyphicon-remove" style="color: red;" data-role="remove-target-item"' +

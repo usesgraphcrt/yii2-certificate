@@ -17,41 +17,35 @@ use Yii;
  */
 class CertificateCertificate extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
+
     public static function tableName()
     {
         return 'certificate_certificate';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['code', 'type', 'created_at', 'status', 'owner_id'], 'required'],
+            [['type', 'created_at', 'status', 'owner_id'], 'required'],
             [['type', 'status'], 'string'],
             [['created_at', 'date_elapsed'], 'safe'],
-            [['owner_id'], 'integer'],
+            [['owner_id', 'target_user'], 'integer'],
             [['code'], 'string', 'max' => 255],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
             'code' => 'Code',
-            'type' => 'Type',
-            'created_at' => 'Created At',
-            'date_elapsed' => 'Date Elapsed',
-            'status' => 'Status',
-            'owner_id' => 'Owner ID',
+            'type' => 'Тип сертификата',
+            'created_at' => 'Дата создания',
+            'date_elapsed' => 'Срок истечения',
+            'status' => 'Статус сертификата',
+            'owner_id' => 'Создал сертификат',
+            'target_user' => 'Владелец сертификата',
         ];
     }
+    
 }

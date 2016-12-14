@@ -48,6 +48,9 @@ class CertificateController extends Controller
         $model = new CertificateCertificate();
         $targetModelList = [];
 
+        $clients = $this->module->clientModel;
+        $clients = $clients::find()->all();
+
         if ($this->module->targetModelList) {
             $targetModelList = $this->module->targetModelList;
         }
@@ -55,7 +58,8 @@ class CertificateController extends Controller
         $model->created_at = date('Y-m-d H:i:s');
         if ($model->load(Yii::$app->request->post()) ) {
             $targets = Yii::$app->request->post();
-            $model->date_elapsed = date('Y-m-d',strtotime(preg_replace('~\D+~','-',$model->date_elapsed)));
+            $model->date_elapsed = date('Y-m-d',strtotime($model->date_elapsed));
+            
             $model->save();
             if ($targets[targetModels] !== null) {
                 $this->saveCertificateToModel($targets[targetModels],$model->id);
@@ -67,6 +71,7 @@ class CertificateController extends Controller
             return $this->render('create', [
                 'model' => $model,
                 'targetModelList' => $targetModelList,
+                'clients' => $clients,
             ]);
         }
     }
@@ -77,7 +82,10 @@ class CertificateController extends Controller
         $certificateItems = CertificateCertificateToItem::find()->where(['certificate_id' => $id])->all();
         $targetModelList = [];
         $items = [];
-        
+
+        $clients = $this->module->clientModel;
+        $clients = $clients::find()->all();
+
         if ($this->module->targetModelList) {
             $targetModelList = $this->module->targetModelList;
         }
@@ -106,6 +114,7 @@ class CertificateController extends Controller
                 'model' => $model,
                 'targetModelList' => $targetModelList,
                 'items' => $items,
+                'clients' => $clients,
             ]);
         }
     }

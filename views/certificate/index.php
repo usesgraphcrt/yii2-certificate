@@ -1,5 +1,6 @@
 <?php
 
+//use yii;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -18,22 +19,52 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Certificate Certificate', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'code',
-            'type',
-            'created_at',
-            'date_elapsed',
-            // 'status',
-            // 'owner_id',
+            [
+                'attribute' => 'type',
+                'format' => 'raw',
+                'value' => function($model) {
+                    if ($model->type == 'item') {
+                        return 'Количество использований';
+                    } else
+                        if ($model->type == 'sum') {
+                            return 'Сумма';
+                        }
+                },
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => 'raw',
+                'value' => function($model) {
+                        return date('d.m.Y H:i',strtotime($model->created_at));
+                    },
+            ],
+            [
+                'attribute' => 'date_elapsed',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return date('d.m.Y',strtotime($model->date_elapsed));
+                },
+            ],
+            [
+                'attribute' => 'target_user',
+                'format' => 'raw',
+                'value' => function($model) {
+                    $targetUser = \Yii::$app->getModule('certificate')->clientModel;
+                    $targetUser = $targetUser::find()->where(['id' => $model->target_user])->one();
 
-            ['class' => 'yii\grid\ActionColumn'],
+                    return $targetUser->name;
+                },
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update} {delete}',
+            ],
         ],
     ]); ?>
 </div>
