@@ -33,7 +33,7 @@ You should add module to your config:
         ...
         'certificate' => [
                     'class' => \usesgraphcrt\certificate\Module::className(),
-                    'sourceModels' => [
+                    'targetModelList' => [
                     //list models for certification
                     ]
                 ],
