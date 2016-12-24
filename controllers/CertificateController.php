@@ -2,16 +2,28 @@
 
 namespace usesgraphcrt\certificate\controllers;
 
-use usesgraphcrt\certificate\models\CertificateCertificateToItem;
+use usesgraphcrt\certificate\models\CertificateToItem;
 use Yii;
-use usesgraphcrt\certificate\models\CertificateCertificate;
-use usesgraphcrt\certificate\models\search\CertificateCertificateSearch;
+use usesgraphcrt\certificate\models\Certificate;
+use usesgraphcrt\certificate\models\search\CertificateSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 class CertificateController extends Controller
 {
+
+
+    protected function getModelTitle($model)
+    {
+        $targetModelList = $this->module->targetModelList;
+        foreach ($targetModelList as $name => $targetModel) {
+            if ($targetModel['model'] == $model) {
+                return $name;
+            }
+        }
+        return false;
+    }
 
     public function behaviors()
     {
@@ -27,12 +39,16 @@ class CertificateController extends Controller
     
     public function actionIndex()
     {
-        $searchModel = new CertificateCertificateSearch();
+        $searchModel = new CertificateSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $targetUser = \Yii::$app->getModule('certificate')->clientModel;
+        $targetUser = new $targetUser;
+//        var_dump($targetUser);
+//        die;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'targetUser' => $targetUser,
         ]);
     }
 
@@ -45,7 +61,7 @@ class CertificateController extends Controller
 
     public function actionCreate()
     {
-        $model = new CertificateCertificate();
+        $model = new Certificate();
         $targetModelList = [];
 
         $clients = $this->module->clientModel;
@@ -58,7 +74,7 @@ class CertificateController extends Controller
         $model->created_at = date('Y-m-d H:i:s');
         if ($model->load(Yii::$app->request->post()) ) {
             $targets = Yii::$app->request->post();
-            $model->date_elapsed = date('Y-m-d',strtotime($model->date_elapsed));
+            $model->date_elapsed = date('Y-m-d H:i:s',strtotime($model->date_elapsed));
             
             $model->save();
             if ($targets[targetModels] !== null) {
@@ -79,9 +95,10 @@ class CertificateController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $certificateItems = CertificateCertificateToItem::find()->where(['certificate_id' => $id])->all();
+        $certificateItems = CertificateToItem::find()->where(['certificate_id' => $id])->all();
         $targetModelList = [];
         $items = [];
+        $title = false;
 
         $clients = $this->module->clientModel;
         $clients = $clients::find()->all();
@@ -92,10 +109,13 @@ class CertificateController extends Controller
 
         foreach ($certificateItems as $certificateItem) {
             $target_model = $certificateItem->target_model;
+            if ($certificateItem->target_id == 0) {
+                $title = $this->getModelTitle($certificateItem->target_model);
+            }
             $target = $target_model::findOne($certificateItem->target_id);
-            $items[] = ['['.$certificateItem->target_model.']['.$target->id.']' =>
+            $items[] = ['['.$certificateItem->target_model.']['.$certificateItem->target_id.']' =>
                 [
-                    'name' => $target->name,
+                    'name' => ($title) ? $title : $target->name,
                     'model' => $certificateItem->target_model,
                     'model_id' => $certificateItem->target_id,
                     'amount' => $certificateItem->amount,
@@ -103,10 +123,10 @@ class CertificateController extends Controller
             ];
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
+        if ($model->load(Yii::$app->request->post())) {
+            $model->date_elapsed = date('Y-m-d H:i:s',strtotime($model->date_elapsed));
             $targets = Yii::$app->request->post();
-
+            $model->save();
             $this->saveCertificateToModel($targets[targetModels],$model->id,$certificateItems);
             return $this->redirect(['index']);
         } else {
@@ -122,13 +142,13 @@ class CertificateController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        
         return $this->redirect(['index']);
     }
     
     protected function findModel($id)
     {
-        if (($model = CertificateCertificate::findOne($id)) !== null) {
+        if (($model = Certificate::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -139,13 +159,13 @@ class CertificateController extends Controller
         if ($productModels){
             foreach ($productModels as $productModel => $modelItems) {
                 foreach ($modelItems as $id => $value) {
-                    $model = CertificateCertificateToItem::find()->where([
+                    $model = CertificateToItem::find()->where([
                         'certificate_id' => $certificateId,
                         'target_model' => $productModel,
                         'target_id' =>$id,
                     ])->one();
                     if (!$model) {
-                        $model = new CertificateCertificateToItem();
+                        $model = new CertificateToItem();
                         $model->certificate_id = $certificateId;
                         $model->target_model = $productModel;
                         $model->target_id = $id;
@@ -153,10 +173,15 @@ class CertificateController extends Controller
                         if ($model->validate() && $model->save()){
                             // do nothing
                         } else var_dump($model->getErrors());
+                    } else {
+                       if   ($model->amount != $value) {
+                           $model->amount = $value;
+                           $model->update();
+                       }
                     }
-                } //model instance foreach
-            } //model namespace foreach
-        } //save CertificateCertificateToItem
+                } 
+            }
+        } 
     }
 
 
@@ -164,7 +189,7 @@ class CertificateController extends Controller
     {
         $target = Yii::$app->request->post();
 
-        $model = CertificateCertificateToItem::find()->where([
+        $model = CertificateToItem::find()->where([
             'certificate_id' => $target['data']['certificateId'],
             'target_model' => $target['data']['targetModel'],
             'target_id' => $target['data']['targetModelId'],

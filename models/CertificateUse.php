@@ -29,10 +29,10 @@ class CertificateUse extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['certificate_id', 'date', 'amount', 'balance'], 'required'],
-            [['certificate_id'], 'integer'],
+            [['certificate_id', 'date', 'amount','item_id','order_id'], 'required'],
+            [['certificate_id','item_id','order_id'], 'integer'],
             [['date'], 'safe'],
-            [['amount', 'balance'], 'number'],
+            [['amount'], 'number'],
         ];
     }
 
@@ -46,7 +46,8 @@ class CertificateUse extends \yii\db\ActiveRecord
             'certificate_id' => 'Certificate ID',
             'date' => 'Date',
             'amount' => 'Amount',
-            'balance' => 'Balance',
+            'item_id' => 'Item Id',
+            'order_id' => 'Order Id',
         ];
     }
 }

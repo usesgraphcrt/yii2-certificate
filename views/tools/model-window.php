@@ -2,7 +2,8 @@
 
 use yii\grid\GridView;
 
-$this->registerJs("$('[data-role=add-model]').on('click', function() {
+$this->registerJs("
+$('[data-role=add-model]').on('click', function() {
         var id = $(this).data('target-model-id');
         var name = $(this).data('target-model-name');
         var targetModel = $(document).find('[data-role=target-model]').val();
@@ -16,6 +17,8 @@ $this->registerJs("$('[data-role=add-model]').on('click', function() {
 ?>
 <div class="product-window">
     <input type="hidden" value="<?=$targetModel?>" data-role="target-model">
+    <div class="btn btn-primary pull-right" data-role="add-model" data-target-model-id="0" data-target-model-name="<?= $targetModelTitle ?>">На всю группу</div>
+    <br>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

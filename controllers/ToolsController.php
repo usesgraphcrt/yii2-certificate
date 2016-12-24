@@ -24,6 +24,7 @@ class ToolsController  extends Controller
             'model' => $model,
             'dataProvider' => $dataProvider,
             'targetModel' => $targetSimpleModel,
+            'targetModelTitle' => $targetModel,
         ]);
     }
 }

@@ -2,12 +2,8 @@
 
 use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\CertificateCertificate */
-
-$this->title = 'Update Certificate Certificate: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Certificate Certificates', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->title = 'Редактирование сертификата: ' . $model->code;
+$this->params['breadcrumbs'][] = ['label' => 'Сертификаты', 'url' => ['index']];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="certificate-certificate-update">

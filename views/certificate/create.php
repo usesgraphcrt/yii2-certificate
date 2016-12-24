@@ -1,13 +1,13 @@
 <?php
 
 use yii\helpers\Html;
+use usesgraphcrt\certificate\assets\Asset;
 
 
-/* @var $this yii\web\View */
-/* @var $model app\models\CertificateCertificate */
+Asset::register($this);
 
-$this->title = 'Create Certificate Certificate';
-$this->params['breadcrumbs'][] = ['label' => 'Certificate Certificates', 'url' => ['index']];
+$this->title = 'Новый сертификат';
+$this->params['breadcrumbs'][] = ['label' => 'Сертификаты', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="certificate-certificate-create">

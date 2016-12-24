@@ -18,7 +18,7 @@ Asset::register($this);
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <?php
                         if($model->isNewRecord) {
                             $code = strtoupper(base_convert(uniqid(rand(),true),5,36));
@@ -38,6 +38,18 @@ Asset::register($this);
                         echo $form->field($model, 'code')->textInput($params)->label('Код сертификата');
                         ?>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'employment')->dropDownList([
+                            'reusable' => 'Многоразовый',
+                            'disposable' => 'Одноразовый',
+                        ],
+                            [
+                                'prompt' => 'Выберите тип:'
+                            ])->hint('Укажите как будет использоваться сертификат.')->label('Вид использования сертификата')
+                        ?>
+                    </div>
                     <div class="col-md-6">
                         <?= $form->field($model, 'type')->dropDownList([
                             'item' => 'Количество использований',
@@ -50,7 +62,7 @@ Asset::register($this);
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <?= $form->field($model, 'status')->dropDownList([
                             'active' => 'Активен',
                             'elapsed' => 'Срок действия стек',
@@ -103,7 +115,7 @@ Asset::register($this);
                             <div class="col-md-4"">
                         <?php
                             Modal::begin([
-                               'header' => '<h2>Сертификат для '.$modelName.'</h2>',
+                               'header' => '<h2>Сертификат для: "'.$modelName.'"</h2>',
                                 'size' => 'modal-lg',
                                 'toggleButton' => [
                                     'tag' => 'button',
@@ -141,11 +153,12 @@ Asset::register($this);
                                             </label>
                                         </td>
                                         <td>
-                                            <input class="form-control" type="text" data-role="product-model" name="targetModels<?=$item_id?>"
+                                            <input class="form-control" type="text" data-role="product-model-amount" name="targetModels<?=$item_id?>"
+                                             data-name="<?=str_replace(['[','\\',']'],'',$item_id)?>"
                                              value="<?=$item_attr['amount']?>">
                                         </td>
                                         <td>
-                                            <span data-href="ajax-delete-model-item" class="btn glyphicon glyphicon-remove" style="color: red;" 
+                                            <span data-href="ajax-delete-target-item" class="btn glyphicon glyphicon-remove" style="color: red;"
                                                   data-role="remove-target-item"
                                                   data-target-model="<?=$item_attr['model'] ?>"
                                                   data-target-model-id="<?=$item_attr['model_id'] ?>"></span>

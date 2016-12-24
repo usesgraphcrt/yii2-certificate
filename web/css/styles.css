@@ -1,0 +1,15 @@
+.certificate-enter {
+    width: 270px;
+}
+
+.certificate-discount {
+    color: red;
+}
+
+.certificate-right-column {
+    padding-left: 20px;
+}
+
+.certificate-right-column button {
+    margin: 10px;
+}

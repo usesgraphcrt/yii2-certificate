@@ -62,11 +62,14 @@ usesgraphcrt.certificate = {
     },
 
     updateModelList: function (targetModelId,targetModel,targetModelName) {
+        if  (!targetModelId) {
+            targetModelId = 0;
+        }
         $targetsList.append($($('<tr data-role="item">')
             .append('<td><label>'+targetModelName +'</label><input type="hidden" data-role="product-model" ' +
                 'name="targetModels[' + targetModel + '][' + targetModelId + ']"' +
                 ' data-name="' + targetModel.replace(/\\/g,'') + targetModelId + '"/></td>')
-            .append('<td><input class="form-control" placeholder="Количество использований" type="text" data-role="product-model-amount" ' +
+            .append('<td><input class="form-control" type="text" data-role="product-model-amount" ' +
                 'name="targetModels[' + targetModel + '][' + targetModelId + ']"' +
                 ' data-name="' + targetModel.replace(/\\/g,'') + targetModelId + '"/></td>')
             .append('<td><span class="btn glyphicon glyphicon-remove" style="color: red;" data-role="remove-target-item"' +
