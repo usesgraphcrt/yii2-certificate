@@ -50,5 +50,10 @@ class Certificate extends \yii\db\ActiveRecord
     {
         return $this->hasMany(CertificateToItem::className(), ['certificate_id' => 'id']);
     }
+
+    public function getTransactions()
+    {
+        return $this->hasMany(CertificateUse::className(),['certificate_id' => 'id']);
+    }
     
 }

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 $this->title = 'Редактирование сертификата: ' . $model->code;
 $this->params['breadcrumbs'][] = ['label' => 'Сертификаты', 'url' => ['index']];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="certificate-certificate-update">
 

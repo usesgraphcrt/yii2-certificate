@@ -14,6 +14,7 @@ class Certificate extends Component
 
     public $certificate = null;
     public $session = null;
+    public $tmpVars = [];
 
     public function init()
     {
@@ -37,10 +38,14 @@ class Certificate extends Component
             if  ($certificateModel->status === 'banned') {
                 throw new \Exception('Сертификат заблокирован');
             }
+
+            if ($certificateModel->status === 'empty') {
+                throw new \Exception('Сертификат исчерпан');
+            }
         } else {
             throw new \Exception('Сертификат истёк');
         }
-
+        $this->tmpVars = [];
         return $this->session->set('certificateCode',$certificateModel->code);
     }
 
@@ -101,19 +106,23 @@ class Certificate extends Component
         if ($model->validate()) {
             $model->save();
             $this->setElementMinusAmount($itemId,$amount);
-            $this->setCertificateStatus($this->getCode());
+            if ($this->getCertificate($this->getCode())->employment == 'disposable') {
+                $this->setCertificateStatus($this->getCode(),'empty');
+            }
             return true;
         } else {
             return $model->getErrors();
         }
     }
 
-    public function checkCertificateStatus($certificateCode){
+    public function checkCertificateStatus($certificateCode)
+    {
 
         $certificate = $this->getCertificate($certificateCode);
 
-        if (strtotime($certificate->date_elapsed) < strtotime(date('Y:m:d H:m:s')) || $certificate->employment == 'disposable') {
+        if (strtotime($certificate->date_elapsed) < strtotime(date('Y:m:d H:m:s'))/* || $certificate->employment == 'disposable'*/) {
                 $this->setCertificateStatus($certificate,'elapsed');
+            return true;
         } else {
             return false;
         }

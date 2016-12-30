@@ -7,6 +7,7 @@ use yii\bootstrap\Modal;
 use usesgraphcrt\certificate\assets\Asset;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 Asset::register($this);
 
@@ -65,7 +66,7 @@ Asset::register($this);
                     <div class="col-md-6">
                         <?= $form->field($model, 'status')->dropDownList([
                             'active' => 'Активен',
-                            'elapsed' => 'Срок действия стек',
+                            'elapsed' => 'Срок действия истек',
                             'empty' => 'Израсходован',
                             'banned' => 'Заблокирован',
                         ],
@@ -111,69 +112,95 @@ Asset::register($this);
             </div>
             <div class="col-md-6 certificate-right-column">
                 <div class="row">
-                        <?php foreach ($targetModelList as $modelName => $modelType){ ?>
-                            <div class="col-md-4"">
-                        <?php
-                            Modal::begin([
-                               'header' => '<h2>Сертификат для: "'.$modelName.'"</h2>',
-                                'size' => 'modal-lg',
-                                'toggleButton' => [
-                                    'tag' => 'button',
-                                    'class' => 'btn btn-sm  btn-primary btn-block form-group',
-                                    'label' => $modelName . ' <i class="glyphicon glyphicon-plus"></i>',
-                                    'data-model' => $modelType['model'],
-                                ]
-                            ]);
-                        ?>
-                        <iframe src="/certificate/tools/model-window?targetModel=<?= $modelName ?>" frameborder="0" style="width: 100%; height: 500px;">
-                        </iframe>
-                        <?php
-                        Modal::end();
-                        ?>
-                            </div>
-                    <?php } ?>
+                    <?php foreach ($targetModelList as $modelName => $modelType){ ?>
+                    <div class="col-md-4"">
+                    <?php
+                    Modal::begin([
+                        'header' => '<h2>Сертификат для: "'.$modelName.'"</h2>',
+                        'size' => 'modal-lg',
+                        'toggleButton' => [
+                            'tag' => 'button',
+                            'class' => 'btn btn-sm  btn-primary btn-block form-group',
+                            'label' => $modelName . ' <i class="glyphicon glyphicon-plus"></i>',
+                            'data-model' => $modelType['model'],
+                        ]
+                    ]);
+                    ?>
+                    <iframe src="/certificate/tools/model-window?targetModel=<?= $modelName ?>" frameborder="0" style="width: 100%; height: 500px;">
+                    </iframe>
+                    <?php
+                    Modal::end();
+                    ?>
                 </div>
+                <?php } ?>
+            </div>
             <br>
-                <div class="row">
-                    <table class="table table-bordered table-striped table-condensed">
-                        <tbody data-role="model-list" id="modelList">
-                        <tr>
-                            <th>Наименование</th>
-                            <th data-role="certificate-type"><?= $type ?></th>
-                            <th>Удаление</th>
-                        </tr>
-                        <?php
-                        if ($items) {
-                            foreach ($items as $item) {
-                                foreach ($item as $item_id => $item_attr) {
-                                    ?>
-                                    <tr data-role="item">
-                                        <td><label>
-                                                <?=$item_attr['name']?>
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <input class="form-control" type="text" data-role="product-model-amount" name="targetModels<?=$item_id?>"
-                                             data-name="<?=str_replace(['[','\\',']'],'',$item_id)?>"
-                                             value="<?=$item_attr['amount']?>">
-                                        </td>
-                                        <td>
+            <div class="row">
+                <table class="table table-bordered table-striped table-condensed">
+                    <tbody data-role="model-list" id="modelList">
+                    <tr>
+                        <th>Наименование</th>
+                        <th data-role="certificate-type"><?= $type ?></th>
+                        <th>Удаление</th>
+                    </tr>
+                    <?php
+                    if ($items) {
+                        foreach ($items as $item) {
+                            foreach ($item as $item_id => $item_attr) {
+                                ?>
+                                <tr data-role="item">
+                                    <td><label>
+                                            <?=$item_attr['name']?>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" data-role="product-model-amount" name="targetModels<?=$item_id?>"
+                                               data-name="<?=str_replace(['[','\\',']'],'',$item_id)?>"
+                                               value="<?=$item_attr['amount']?>">
+                                    </td>
+                                    <td>
                                             <span data-href="ajax-delete-target-item" class="btn glyphicon glyphicon-remove" style="color: red;"
                                                   data-role="remove-target-item"
                                                   data-target-model="<?=$item_attr['model'] ?>"
                                                   data-target-model-id="<?=$item_attr['model_id'] ?>"></span>
-                                        </td>
+                                    </td>
 
-                                    </tr>
-                                <?php    }
-                            }
+                                </tr>
+                            <?php    }
                         }
-                        ?>
-                        </tbody>
-                    </table>
-                </div>
+                    }
+                    ?>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <?php ActiveForm::end(); ?>
     </div>
+    <?php ActiveForm::end(); ?>
+    <?php if ($model->getTransactions()->all()) { ?>
+        <input type="button" class="btn btn-primary" data-toggle="collapse" data-target="#toggleHistory" value="История использований">
+        <br>
+        <div id="toggleHistory" class="collapse">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Дата использования</th>
+                            <th><?= $type ?></th>
+                            <th>Номер заказа</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($model->getTransactions()->all() as $certificateUse) {?>
+                        <tr>
+                            <td><?= date('d.m.Y H:i:s',strtotime($certificateUse->date)) ?></td>
+                            <td><?= $certificateUse->amount ?></td>
+                            <td><a href="<?=Url::to(['/order/order/view', 'id' => $certificateUse->order_id]) ?>"><?= $certificateUse->order_id ?></a></td>
+                        </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <?php } ?>
+</div>
 </div>
