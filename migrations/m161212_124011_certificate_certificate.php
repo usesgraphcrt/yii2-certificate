@@ -24,8 +24,10 @@ class m161212_124011_certificate_certificate extends Migration
                 'type'=> $this->string()->notNull(),
                 'created_at'=> $this->datetime()->notNull(),
                 'date_elapsed'=> $this->datetime()->null()->defaultValue(null),
+                'employment'=> $this->string(55)->notNull(),
                 'status'=> $this->string()->notNull(),
                 'owner_id'=> $this->integer(11)->notNull(),
+                'target_user'=> $this->integer(11)->null(),
             ],$tableOptions
         );
     }

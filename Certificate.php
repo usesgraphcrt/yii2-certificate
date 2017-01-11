@@ -66,7 +66,7 @@ class Certificate extends Component
         $certificateCode = $this->getCode();
         $certificate = $this->certificate;
         if ($certificateCode) {
-            return $certificate::findOne(['code' => $certificateCode]);
+            return $certificate::find()->where(['code' => $certificateCode])->one();
         } else {
             return false;
         }

@@ -107,7 +107,7 @@ Asset::register($this);
                     </div>
                 </div>
                 <div class="form-group">
-                    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+                    <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
                 </div>
             </div>
             <div class="col-md-6 certificate-right-column">

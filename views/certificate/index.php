@@ -118,10 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 },
             ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
-            ],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{update} {delete}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 103px;']],
         ],
     ]); ?>
 </div>

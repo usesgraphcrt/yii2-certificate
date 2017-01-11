@@ -27,7 +27,7 @@ class Certificate extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'code' => 'Code',
+            'code' => 'Код',
             'type' => 'Тип сертификата',
             'employment' => 'Тип использования',
             'created_at' => 'Дата создания',
