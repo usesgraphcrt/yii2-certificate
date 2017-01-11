@@ -24,6 +24,8 @@ class m161212_124111_certificate_use extends Migration
                 'date'=> $this->datetime()->notNull(),
                 'amount'=> $this->decimal(12, 2)->notNull(),
                 'balance'=> $this->decimal(12, 2)->notNull(),
+                'item_id'=> $this->integer(11),
+                'order_id'=> $this->integer(11)->notNull(),
             ],$tableOptions
         );
     }
