@@ -88,8 +88,20 @@ class Certificate extends Component
     {
         $model = CertificateToItem::findOne($elementId);
         $model->amount = $model->amount - $amount;
-        if ($model->update()){
-            return true;
+        if ($amount > $model->amount) {
+            $model->amount = 0;
+        }
+        if ($model->save(false)){
+            if ($model->amount <= 0) {
+                return [
+                    'status' => 'empty',
+                ];
+            }
+            else {
+                return [
+                    'status' => $model->status,
+                ];
+            }
         } else {
             return false;
         }
@@ -105,9 +117,12 @@ class Certificate extends Component
         $model->order_id = $orderId;
         if ($model->validate()) {
             $model->save();
-            $this->setElementMinusAmount($itemId,$amount);
+            $result = $this->setElementMinusAmount($itemId,$amount);
+            if ($result) {
+                $this->setCertificateStatus($this->getCurrent(),$result['status']);
+            }
             if ($this->getCertificate($this->getCode())->employment == 'disposable') {
-                $this->setCertificateStatus($this->getCode(),'empty');
+                $this->setCertificateStatus($this->getCurrent(),'empty');
             }
             return true;
         } else {
@@ -132,7 +147,7 @@ class Certificate extends Component
     {
         $certificate->status = $status;
 
-        return $certificate->update();
+        return $certificate->save(false);
 
     }
 

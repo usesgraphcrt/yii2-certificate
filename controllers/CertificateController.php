@@ -43,8 +43,6 @@ class CertificateController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $targetUser = \Yii::$app->getModule('certificate')->clientModel;
         $targetUser = new $targetUser;
-//        var_dump($targetUser);
-//        die;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -77,8 +75,8 @@ class CertificateController extends Controller
             $model->date_elapsed = date('Y-m-d H:i:s',strtotime($model->date_elapsed));
             
             $model->save();
-            if ($targets[targetModels] !== null) {
-                $this->saveCertificateToModel($targets[targetModels],$model->id);
+            if ($targets['targetModels'] !== null) {
+                $this->saveCertificateToModel($targets['targetModels'],$model->id);
             }
 
             return $this->redirect(['index']);
@@ -127,7 +125,7 @@ class CertificateController extends Controller
             $model->date_elapsed = date('Y-m-d H:i:s',strtotime($model->date_elapsed));
             $targets = Yii::$app->request->post();
             $model->save();
-            $this->saveCertificateToModel($targets[targetModels],$model->id,$certificateItems);
+            $this->saveCertificateToModel($targets['targetModels'],$model->id,$certificateItems);
             return $this->redirect(['index']);
         } else {
             return $this->render('update', [

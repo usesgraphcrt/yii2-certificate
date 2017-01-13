@@ -7,6 +7,7 @@ use yii\base\Behavior;
 class Certification extends Behavior
 {
     public $certificatePaymentTypes = null;
+
     public function events()
     {
         return [
@@ -39,11 +40,12 @@ class Certification extends Behavior
                         if ($certificate->type == 'item') {
                             $balance = $orderElement->count;
                             $amount = $targetModel->amount - $balance;
+                            if ($amount < 0) { $amount = 0;}
                         } else {
                             $balance = $orderElement->base_price*$orderElement->count;
                             $amount = $targetModel->amount - $balance;
+                            if ($amount < 0) { $amount = 0;}
                         }
-//                        yii::$app->certificate->setElementAmount($targetModel->id,$amount);
                         yii::$app->certificate->setCertificateUse($certificate->id,$balance,$targetModel->id,$orderModel->id);
                     }
                 }
@@ -51,4 +53,3 @@ class Certification extends Behavior
         }
     }
 }
-

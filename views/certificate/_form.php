@@ -144,7 +144,7 @@ Asset::register($this);
                         <th>Удаление</th>
                     </tr>
                     <?php
-                    if ($items) {
+                    if (isset($items)) {
                         foreach ($items as $item) {
                             foreach ($item as $item_id => $item_attr) {
                                 ?>
