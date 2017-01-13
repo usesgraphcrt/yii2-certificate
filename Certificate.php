@@ -99,7 +99,7 @@ class Certificate extends Component
             }
             else {
                 return [
-                    'status' => $model->status,
+                  'status' => 'default',
                 ];
             }
         } else {
@@ -118,7 +118,7 @@ class Certificate extends Component
         if ($model->validate()) {
             $model->save();
             $result = $this->setElementMinusAmount($itemId,$amount);
-            if ($result) {
+            if ($result['status'] == 'empty') {
                 $this->setCertificateStatus($this->getCurrent(),$result['status']);
             }
             if ($this->getCertificate($this->getCode())->employment == 'disposable') {
