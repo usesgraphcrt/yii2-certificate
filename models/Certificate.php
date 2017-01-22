@@ -15,7 +15,10 @@ class Certificate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'created_at', 'status', 'owner_id'], 'required'],
+            [['created_at', 'owner_id'], 'required'],
+            [['type'],'required','message' => 'Необходимо выбрать тип сертификата.'],
+            [['status'],'required','message' => 'Необходимо выбрать статус сертификата.'],
+            [['target_user'],'required', 'message' => 'Необходимо выбрать клиента.'],
             [['type', 'status', 'employment'], 'string'],
             [['created_at', 'date_elapsed'], 'safe'],
             [['owner_id', 'target_user'], 'integer'],
@@ -34,7 +37,7 @@ class Certificate extends \yii\db\ActiveRecord
             'date_elapsed' => 'Срок истечения',
             'status' => 'Статус сертификата',
             'owner_id' => 'Создал сертификат',
-            'target_user' => 'Владелец сертификата',
+            'target_user' => 'Клиент',
         ];
     }
 

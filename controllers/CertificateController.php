@@ -79,7 +79,7 @@ class CertificateController extends Controller
                 $this->saveCertificateToModel($targets['targetModels'],$model->id);
             }
 
-            return $this->redirect(['index']);
+            return $this->redirect('index');
         }
         else {
             return $this->render('create', [

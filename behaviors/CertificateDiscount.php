@@ -35,38 +35,38 @@ class CertificateDiscount extends Behavior
         if ($code = yii::$app->certificate->getCode() && $targetModelList = yii::$app->certificate->getTargetModels()) {
             $certificate = yii::$app->certificate->getCurrent();
 
-            if($certificate->status != 'active') {
+            if ($certificate->status != 'active') {
                 return false;
             }
 
-            if(strtotime($certificate->date_elapsed) < time()) {
+            if (strtotime($certificate->date_elapsed) < time()) {
                 return false;
             }
 
             foreach ($targetModelList as $targetModel) {
-                if($targetModel->target_id == 0) {
+                if ($targetModel->target_id == 0) {
                     $sourceTarget = true;
                 } else {
                     $sourceTarget = $targetModel->target_id == $event->element->getModel()->id;
                 }
 
                 if ($targetModel->target_model == $event->element->model && $sourceTarget) {
-                    if($certificate->type == 'item') {
+                    if ($certificate->type == 'item') {
                         if (!isset(yii::$app->certificate->tmpVars['item_count'][$event->element->id])) {
                             yii::$app->certificate->tmpVars['item_count'][$event->element->id] = 0;
                         }
-                        if($targetModel->amount > yii::$app->certificate->tmpVars['item_count'][$event->element->id]) {
+                        if ($targetModel->amount > yii::$app->certificate->tmpVars['item_count'][$event->element->id]) {
                             $event->cost = 0;
                         }
                         yii::$app->certificate->tmpVars['item_count'][$event->element->id] =
-                            yii::$app->certificate->tmpVars['item_count'][$event->element->id]+1;
+                            yii::$app->certificate->tmpVars['item_count'][$event->element->id] + 1;
                     } else {
                         $newCost = $event->cost;
                         $certificateAmount = $this->checkCertificateAmount($newCost, $targetModel, $event->element->id);
 
                         if ($certificateAmount > 0) {
-                            if($newCost > $certificateAmount) {
-                                $newCost = $newCost-$certificateAmount;
+                            if ($newCost > $certificateAmount) {
+                                $newCost = $newCost - $certificateAmount;
                                 $event->cost = $newCost;
                             } else {
                                 $event->cost = 0;
@@ -86,7 +86,7 @@ class CertificateDiscount extends Behavior
 
     public function checkCertificateAmount($productCost, $certificateItem, $elementId)
     {
-        if(!isset(yii::$app->certificate->tmpVars[$certificateItem->id])) {
+        if (!isset(yii::$app->certificate->tmpVars[$certificateItem->id])) {
             yii::$app->certificate->tmpVars[$certificateItem->id] = [];
         }
 

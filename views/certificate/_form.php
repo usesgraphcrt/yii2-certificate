@@ -47,8 +47,8 @@ Asset::register($this);
                             'disposable' => 'Одноразовый',
                         ],
                             [
-                                'prompt' => 'Выберите тип:'
-                            ])->hint('Укажите как будет использоваться сертификат.')->label('Вид использования сертификата')
+                                'prompt' => 'Тип использования:'
+                            ])->hint('В этом поле заполняется тип использования сертификата.')->label('Вид использования сертификата')
                         ?>
                     </div>
                     <div class="col-md-6">
@@ -57,8 +57,8 @@ Asset::register($this);
                             'sum' => 'Сумма',
                         ],
                             [
-                                'prompt' => 'Выберите тип сертификата:'
-                            ])->hint('Укажите тип сертификата.')->label('Тип сертификата')
+                                'prompt' => 'Тип сертификата:'
+                            ])->label('Тип сертификата')
                         ?>
                     </div>
                 </div>
@@ -71,7 +71,7 @@ Asset::register($this);
                             'banned' => 'Заблокирован',
                         ],
                             [
-                                'prompt' => 'Укажите статус сертиификата:'
+                                'prompt' => 'Статус сертиификата:'
                             ])->label('Статус') ?>
                     </div>
                     <div class="col-md-6">
@@ -98,7 +98,7 @@ Asset::register($this);
                             ->widget(Select2::classname(), [
                                 'data' => ArrayHelper::map($clients, 'id', 'name'),
                                 'language' => 'ru',
-                                'options' => ['placeholder' => 'Выберите пользователей ...'],
+                                'options' => ['placeholder' => 'Выберите клиента ...'],
                                 'pluginOptions' => [
                                     'allowClear' => true
                                 ],
