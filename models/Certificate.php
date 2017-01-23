@@ -18,7 +18,6 @@ class Certificate extends \yii\db\ActiveRecord
             [['created_at', 'owner_id'], 'required'],
             [['type'],'required','message' => 'Необходимо выбрать тип сертификата.'],
             [['status'],'required','message' => 'Необходимо выбрать статус сертификата.'],
-//            [['target_user'],'required', 'message' => 'Необходимо выбрать клиента.'],
             [['type', 'status', 'employment'], 'string'],
             [['created_at', 'date_elapsed'], 'safe'],
             [['owner_id', 'target_user'], 'integer'],

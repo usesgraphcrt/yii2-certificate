@@ -35,14 +35,6 @@ class CertificateDiscount extends Behavior
         if ($code = yii::$app->certificate->getCode() && $targetModelList = yii::$app->certificate->getTargetModels()) {
             $certificate = yii::$app->certificate->getCurrent();
 
-            if ($certificate->status != 'active') {
-                return false;
-            }
-
-            if (strtotime($certificate->date_elapsed) < time()) {
-                return false;
-            }
-
             foreach ($targetModelList as $targetModel) {
                 if ($targetModel->target_id == 0) {
                     $sourceTarget = true;
