@@ -28,7 +28,11 @@ Asset::register($this);
                             $type = 'Количество | Сумма';
                         } else {
                             $params = [];
-                            $date = date('d.m.Y',strtotime($model->date_elapsed));
+                            if (empty($model->date_elapsed)) {
+                                $date = '';
+                            } else {
+                                $date = date('d.m.Y',strtotime($model->date_elapsed));
+                            }
                             if ($model->type == 'item') {
                                 $type = 'Количество использований';
                             } else
@@ -47,13 +51,20 @@ Asset::register($this);
                             'disposable' => 'Одноразовый',
                         ],
                             [
+                                'options' => [
+                                    'reusable' => [
+                                        'selected ' => true
+                                    ]
+                                ]
+                            ],
+                            [
                                 'prompt' => 'Тип использования:'
                             ])->hint('В этом поле заполняется тип использования сертификата.')->label('Вид использования сертификата')
                         ?>
                     </div>
                     <div class="col-md-6">
                         <?= $form->field($model, 'type')->dropDownList([
-                            'item' => 'Количество использований',
+                            'item' => 'Количество применений',
                             'sum' => 'Сумма',
                         ],
                             [
@@ -65,11 +76,18 @@ Asset::register($this);
                 <div class="row">
                     <div class="col-md-6">
                         <?= $form->field($model, 'status')->dropDownList([
-                            'active' => 'Активен',
-                            'elapsed' => 'Срок действия истек',
-                            'empty' => 'Израсходован',
-                            'banned' => 'Заблокирован',
-                        ],
+                                'active' => 'Активен',
+                                'elapsed' => 'Срок действия истек',
+                                'empty' => 'Израсходован',
+                                'banned' => 'Заблокирован',
+                            ],
+                            [
+                                'options' => [
+                                        'active' => [
+                                            'selected ' => true
+                                        ]
+                                    ]
+                            ],
                             [
                                 'prompt' => 'Статус сертиификата:'
                             ])->label('Статус') ?>
@@ -118,9 +136,12 @@ Asset::register($this);
                     Modal::begin([
                         'header' => '<h2>Сертификат для: "'.$modelName.'"</h2>',
                         'size' => 'modal-lg',
+                        'options' => [
+                            'class' => 'product-modal',
+                        ],
                         'toggleButton' => [
                             'tag' => 'button',
-                            'class' => 'btn btn-sm  btn-primary btn-block form-group',
+                            'class' => 'btn btn-sm  btn-primary btn-block form-group ',
                             'label' => $modelName . ' <i class="glyphicon glyphicon-plus"></i>',
                             'data-model' => $modelType['model'],
                         ]

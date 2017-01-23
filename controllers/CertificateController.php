@@ -36,7 +36,7 @@ class CertificateController extends Controller
             ],
         ];
     }
-    
+
     public function actionIndex()
     {
         $searchModel = new CertificateSearch();
@@ -70,18 +70,23 @@ class CertificateController extends Controller
         }
         $model->owner_id = \Yii::$app->user->id;
         $model->created_at = date('Y-m-d H:i:s');
-        if ($model->load(Yii::$app->request->post()) ) {
+        if ($model->load(Yii::$app->request->post())) {
+            if (strlen($model->date_elapsed) > 0) {
+                $model->date_elapsed = date('Y-m-d H:i:s', strtotime($model->date_elapsed));
+            } else {
+                $model->date_elapsed = null;
+            }
+
             $targets = Yii::$app->request->post();
-            $model->date_elapsed = date('Y-m-d H:i:s',strtotime($model->date_elapsed));
             
+
             $model->save();
-            if ($targets['targetModels'] !== null) {
-                $this->saveCertificateToModel($targets['targetModels'],$model->id);
+            if (isset($targets['targetModels'])) {
+                $this->saveCertificateToModel($targets['targetModels'], $model->id);
             }
 
             return $this->redirect('index');
-        }
-        else {
+        } else {
             return $this->render('create', [
                 'model' => $model,
                 'targetModelList' => $targetModelList,
@@ -89,7 +94,7 @@ class CertificateController extends Controller
             ]);
         }
     }
-    
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -111,7 +116,7 @@ class CertificateController extends Controller
                 $title = $this->getModelTitle($certificateItem->target_model);
             }
             $target = $target_model::findOne($certificateItem->target_id);
-            $items[] = ['['.$certificateItem->target_model.']['.$certificateItem->target_id.']' =>
+            $items[] = ['[' . $certificateItem->target_model . '][' . $certificateItem->target_id . ']' =>
                 [
                     'name' => ($title) ? $title : $target->name,
                     'model' => $certificateItem->target_model,
@@ -122,11 +127,23 @@ class CertificateController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->date_elapsed = date('Y-m-d H:i:s',strtotime($model->date_elapsed));
+
+            if (strlen($model->date_elapsed) > 0) {
+                $model->date_elapsed = date('Y-m-d H:i:s', strtotime($model->date_elapsed));
+            } else {
+                $model->date_elapsed = null;
+            }
+
             $targets = Yii::$app->request->post();
+
             $model->save();
-            $this->saveCertificateToModel($targets['targetModels'],$model->id,$certificateItems);
+
+            if (isset($targets['targetModels'])) {
+                $this->saveCertificateToModel($targets['targetModels'], $model->id, $certificateItems);
+            }
+
             return $this->redirect(['index']);
+
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -136,14 +153,14 @@ class CertificateController extends Controller
             ]);
         }
     }
-    
+
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        
+
         return $this->redirect(['index']);
     }
-    
+
     protected function findModel($id)
     {
         if (($model = Certificate::findOne($id)) !== null) {
@@ -153,14 +170,15 @@ class CertificateController extends Controller
         }
     }
 
-    protected function saveCertificateToModel($productModels,$certificateId,$savedItems = null){
-        if ($productModels){
+    protected function saveCertificateToModel($productModels, $certificateId, $savedItems = null)
+    {
+        if ($productModels) {
             foreach ($productModels as $productModel => $modelItems) {
                 foreach ($modelItems as $id => $value) {
                     $model = CertificateToItem::find()->where([
                         'certificate_id' => $certificateId,
                         'target_model' => $productModel,
-                        'target_id' =>$id,
+                        'target_id' => $id,
                     ])->one();
                     if (!$model) {
                         $model = new CertificateToItem();
@@ -168,18 +186,18 @@ class CertificateController extends Controller
                         $model->target_model = $productModel;
                         $model->target_id = $id;
                         $model->amount = $value;
-                        if ($model->validate() && $model->save()){
+                        if ($model->validate() && $model->save()) {
                             // do nothing
                         } else var_dump($model->getErrors());
                     } else {
-                       if   ($model->amount != $value) {
-                           $model->amount = $value;
-                           $model->update();
-                       }
+                        if ($model->amount != $value) {
+                            $model->amount = $value;
+                            $model->update();
+                        }
                     }
-                } 
+                }
             }
-        } 
+        }
     }
 
 
@@ -198,7 +216,7 @@ class CertificateController extends Controller
                 return [
                     'status' => 'success',
                 ];
-            }   else return [
+            } else return [
                 'status' => 'error',
             ];
         } else

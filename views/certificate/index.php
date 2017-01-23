@@ -77,7 +77,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'date_elapsed',
                 'format' => 'raw',
                 'value' => function($model) {
-                    return date('d.m.Y',strtotime($model->date_elapsed));
+                    if ($model->date_elapsed) {
+                        return date('d.m.Y',strtotime($model->date_elapsed));
+                    } else {
+                        return '<span style="color: green">
+                                    <i>беcсрочный</i>    
+                                </span>';
+                    }
+
                 },
             ],
             [
@@ -88,7 +95,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     'name' => 'CertificateCertificateSearch[target_user]',
                     'data'  => ['' => 'Все',ArrayHelper::map($targetUser::find()->all(), 'id', 'name')],
                     ]),
-                'value' => function($model){ return $model->getTargetUser();},
+                'value' => function($model){
+                    if  ($model->target_user) {
+                        return $model->getTargetUser();
+                    } else {
+                        return '<span style="color: red;">
+                                   <i>не выбран<i> 
+                                </span>';
+                    }
+
+                },
             ],
             [
                 'attribute' => 'status',

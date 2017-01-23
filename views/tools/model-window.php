@@ -12,6 +12,7 @@ $('[data-role=add-model]').on('click', function() {
             alert('Элемент уже добавлен!');
         } else {
             window.parent.usesgraphcrt.certificate.updateModelList(id,targetModel,name);
+            $('.product-modal').modal('toggle');
         }
     });");
 ?>

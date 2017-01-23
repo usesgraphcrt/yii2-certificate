@@ -30,7 +30,7 @@ class Certificate extends Component
             throw new \Exception('Сертификат исчерпан');
         }
 
-        if (!$this->checkCertificateStatus($certificateCode)) {
+        if ($this->checkCertificateStatus($certificateCode)) {
             if(!$certificateModel = $this->getCertificate($certificateCode)) {
                 throw new \Exception('Сертификат не найден');
             }
@@ -135,11 +135,15 @@ class Certificate extends Component
 
         $certificate = $this->getCertificate($certificateCode);
 
+        if (empty($certificate->date_elapsed)) {
+            return true;
+        }
+
         if (strtotime($certificate->date_elapsed) < strtotime(date('Y:m:d H:m:s'))/* || $certificate->employment == 'disposable'*/) {
                 $this->setCertificateStatus($certificate,'elapsed');
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 

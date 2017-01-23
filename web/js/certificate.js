@@ -25,11 +25,11 @@ usesgraphcrt.certificate = {
             $(currentBlock).remove();
         });
 
-        $(document).on('change','#certificatecertificate-type', function(){
+        $(document).on('change','#certificate-type', function(){
             if ($(this).val() == 'sum') {
                 $('[data-role=certificate-type]').text('Сумма');
             } else if ($(this).val() == 'item') {
-                $('[data-role=certificate-type]').text('Количество использований');
+                $('[data-role=certificate-type]').text('Количество применений');
             }
         });
     },
@@ -64,6 +64,7 @@ usesgraphcrt.certificate = {
     updateModelList: function (targetModelId,targetModel,targetModelName) {
         if  (!targetModelId) {
             targetModelId = 0;
+            $(document).find('.product-modal').modal('hide');
         }
         $targetsList.append($($('<tr data-role="item">')
             .append('<td><label>'+targetModelName +'</label><input type="hidden" data-role="product-model" ' +
@@ -77,8 +78,6 @@ usesgraphcrt.certificate = {
                 ' data-target-model-id="' + targetModelId + '"></span></td>')
         ));
     },
-
-
 
     getUrlVar: function () {
         var vars = {};
