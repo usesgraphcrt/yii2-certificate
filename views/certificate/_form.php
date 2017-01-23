@@ -126,6 +126,7 @@ Asset::register($this);
                 </div>
                 <div class="form-group">
                     <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'data-role' => 'send-form']) ?>
+                    <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success hidden' : 'btn btn-primary hidden', 'data-role' => 'send-form2']) ?>
                 </div>
             </div>
             <div class="col-md-6 certificate-right-column">
@@ -193,6 +194,11 @@ Asset::register($this);
                     ?>
                     </tbody>
                 </table>
+                <div class="hidden" data-role="error-validate">
+                    <div class="alert alert-danger text-center">
+                        Вы не добавили ни одного элемента в сертификат!
+                    </div>
+                </div>
             </div>
         </div>
     </div>

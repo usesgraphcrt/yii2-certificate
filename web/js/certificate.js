@@ -41,9 +41,9 @@ usesgraphcrt.certificate = {
     validate: function(e){
         e.preventDefault();
         if ($(document).find( "input[name ^='targetModels']") .length > 0) {
-            $(document).find('form').submit();
+            $(document).find('[data-role=send-form2]').click();
         } else {
-            console.log('not found');
+            $('[data-role=error-validate]').removeClass('hidden').fadeIn();
         }
     },
 
@@ -90,6 +90,8 @@ usesgraphcrt.certificate = {
                 ' data-target-model="' + targetModel + '"' +
                 ' data-target-model-id="' + targetModelId + '"></span></td>')
         ));
+
+        $('[data-role=error-validate]').fadeOut();
 
     },
 
