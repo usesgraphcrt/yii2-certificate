@@ -125,7 +125,7 @@ Asset::register($this);
                     </div>
                 </div>
                 <div class="form-group">
-                    <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+                    <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'data-role' => 'send-form']) ?>
                 </div>
             </div>
             <div class="col-md-6 certificate-right-column">
@@ -177,7 +177,7 @@ Asset::register($this);
                                     <td>
                                         <input class="form-control" type="text" data-role="product-model-amount" name="targetModels<?=$item_id?>"
                                                data-name="<?=str_replace(['[','\\',']'],'',$item_id)?>"
-                                               value="<?=$item_attr['amount']?>">
+                                               value="<?=$item_attr['amount']?>" required>
                                     </td>
                                     <td>
                                             <span data-href="ajax-delete-target-item" class="btn glyphicon glyphicon-remove" style="color: red;"

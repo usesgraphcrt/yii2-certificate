@@ -78,7 +78,7 @@ class CertificateController extends Controller
             }
 
             $targets = Yii::$app->request->post();
-            
+
 
             $model->save();
             if (isset($targets['targetModels'])) {
@@ -142,7 +142,7 @@ class CertificateController extends Controller
                 $this->saveCertificateToModel($targets['targetModels'], $model->id, $certificateItems);
             }
 
-            return $this->redirect(['index']);
+            return $this->redirect('index');
 
         } else {
             return $this->render('update', [

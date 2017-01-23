@@ -8,6 +8,10 @@ usesgraphcrt.certificate = {
         $targetsList = $('[data-role=model-list]');
         $productModels = {};
 
+        $('[data-role=send-form]').on('click',function(e){
+            usesgraphcrt.certificate.validate(e);
+        });
+
 
         $(document).on('click','[data-role=remove-target-item]',function () {
 
@@ -32,6 +36,15 @@ usesgraphcrt.certificate = {
                 $('[data-role=certificate-type]').text('Количество применений');
             }
         });
+    },
+
+    validate: function(e){
+        e.preventDefault();
+        if ($(document).find( "input[name ^='targetModels']") .length > 0) {
+            $(document).find('form').submit();
+        } else {
+            console.log('not found');
+        }
     },
 
     getTargetItem: function (targetModelId,targetModel) {
@@ -72,11 +85,12 @@ usesgraphcrt.certificate = {
                 ' data-name="' + targetModel.replace(/\\/g,'') + targetModelId + '"/></td>')
             .append('<td><input class="form-control" type="text" data-role="product-model-amount" ' +
                 'name="targetModels[' + targetModel + '][' + targetModelId + ']"' +
-                ' data-name="' + targetModel.replace(/\\/g,'') + targetModelId + '"/></td>')
+                ' data-name="' + targetModel.replace(/\\/g,'') + targetModelId + '"/ required></td>')
             .append('<td><span class="btn glyphicon glyphicon-remove" style="color: red;" data-role="remove-target-item"' +
                 ' data-target-model="' + targetModel + '"' +
                 ' data-target-model-id="' + targetModelId + '"></span></td>')
         ));
+
     },
 
     getUrlVar: function () {
