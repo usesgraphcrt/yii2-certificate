@@ -47,6 +47,7 @@ class Certification extends Behavior
                             if ($amount < 0) { $amount = 0;}
                         }
                         yii::$app->certificate->setCertificateUse($certificate->id,$balance,$targetModel->id,$orderModel->id);
+                        yii::$app->certificate->clear();
                     }
                 }
             }
