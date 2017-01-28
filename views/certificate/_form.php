@@ -217,7 +217,7 @@ Asset::register($this);
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($model->getTransactions()->all() as $certificateUse) {?>
+                    <?php foreach($model->getTransactions()->orderBy(['date' => SORT_DESC])->all() as $certificateUse) {?>
                         <tr>
                             <td><?= date('d.m.Y H:i:s',strtotime($certificateUse->date)) ?></td>
                             <td><?= $certificateUse->amount ?></td>

@@ -27,9 +27,13 @@ class Certification extends Behavior
                     if ($targetModel->target_id == 0) {
                         $sourceTarget = true;
                     } else {
-                        $sourceTarget = $targetModel->target_id == $orderElement->item_id;
+                        if  ($targetModel->target_model != 'pistol88\service\models\Category') {
+                            $sourceTarget = $targetModel->target_id == $orderElement->item_id;
+                        } else {
+                            $sourceTarget = $targetModel->target_id == $orderElement->getModel()->category_id;
+                        }
                     }
-                    if ($targetModel->target_model == $orderElement->getModel()->className() && $sourceTarget) {
+                    if ($targetModel->target_model == $orderElement->getModel()->className() && $sourceTarget || $targetModel->target_model == 'pistol88\service\models\Category' && $sourceTarget) {
                         if  ($certificate->type == 'item') {
                             if ($targetModel->amount < $orderElement->count) {
                                 $amount = 0;
