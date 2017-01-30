@@ -39,10 +39,14 @@ class CertificateDiscount extends Behavior
                 if ($targetModel->target_id == 0) {
                     $sourceTarget = true;
                 } else {
-                    $sourceTarget = $targetModel->target_id == $event->element->getModel()->id;
+                    if  ($targetModel->target_model != 'pistol88\service\models\Category') {
+                        $sourceTarget = $targetModel->target_id == $event->element->getModel()->id;
+                    } else {
+                        $sourceTarget = $targetModel->target_id == $event->element->getModel()->category_id;
+                    }
                 }
 
-                if ($targetModel->target_model == $event->element->model && $sourceTarget) {
+                if ($targetModel->target_model == $event->element->model && $sourceTarget || $targetModel->target_model == 'pistol88\service\models\Category' && $sourceTarget) {
                     if ($certificate->type == 'item') {
                         if (!isset(yii::$app->certificate->tmpVars['item_count'][$event->element->id])) {
                             yii::$app->certificate->tmpVars['item_count'][$event->element->id] = 0;
