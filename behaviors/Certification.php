@@ -14,6 +14,7 @@ class Certification extends Behavior
             'create' => 'useCertificate'
         ];
     }
+
     public function useCertificate($event)
     {
 
@@ -27,31 +28,38 @@ class Certification extends Behavior
                     if ($targetModel->target_id == 0) {
                         $sourceTarget = true;
                     } else {
-                        if  ($targetModel->target_model != 'pistol88\service\models\Category') {
+                        if ($targetModel->target_model != 'pistol88\service\models\Category') {
                             $sourceTarget = $targetModel->target_id == $orderElement->item_id;
                         } else {
                             $sourceTarget = $targetModel->target_id == $orderElement->getModel()->category_id;
                         }
                     }
                     if ($targetModel->target_model == $orderElement->getModel()->className() && $sourceTarget || $targetModel->target_model == 'pistol88\service\models\Category' && $sourceTarget) {
-                        if  ($certificate->type == 'item') {
-                            if ($targetModel->amount < $orderElement->count) {
-                                $amount = 0;
-                            }
-                        } elseif ($targetModel->amount < $orderElement->base_price) {
-                            $amount = 0;
+                        
+                        if ($targetModel->amount == 0 || yii::$app->certificate->getCertificateItemBalance($targetModel->id) == 0) {
+                            break;
                         }
                         if ($certificate->type == 'item') {
-                            $balance = $orderElement->count;
-                            $amount = $targetModel->amount - $balance;
-                            if ($amount < 0) { $amount = 0;}
+                            if (yii::$app->certificate->getCertificateItemBalance($targetModel->id) < $orderElement->count) {
+                                $amount = yii::$app->certificate->getCertificateItemBalance($targetModel->id);
+                            } else {
+                                $amount = $orderElement->count;
+                            }
                         } else {
-                            $balance = $orderElement->base_price*$orderElement->count;
-                            $amount = $targetModel->amount - $balance;
-                            if ($amount < 0) { $amount = 0;}
+                            if (yii::$app->certificate->getCertificateItemBalance($targetModel->id) < ($orderElement->base_price*$orderElement->count)) {
+                                $amount = yii::$app->certificate->getCertificateItemBalance($targetModel->id);
+                            } else {
+                                $amount = $orderElement->base_price * $orderElement->count;
+                            }
                         }
-                        yii::$app->certificate->setCertificateUse($certificate->id,$balance,$targetModel->id,$orderModel->id);
+                        
+                        if ($amount < 0) {
+                            $amount = 0;
+                        }
+
+                        yii::$app->certificate->setCertificateUse($certificate->id, $amount, $targetModel->id, $orderModel->id);
                         yii::$app->certificate->clear();
+
                     }
                 }
             }

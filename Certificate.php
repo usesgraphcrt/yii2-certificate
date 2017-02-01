@@ -15,6 +15,7 @@ class Certificate extends Component
     public $certificate = null;
     public $session = null;
     public $tmpVars = [];
+    public $delivery_type_id = null;
 
     public function init()
     {
@@ -31,11 +32,11 @@ class Certificate extends Component
         }
 
         if ($this->checkCertificateStatus($certificateCode)) {
-            if(!$certificateModel = $this->getCertificate($certificateCode)) {
+            if (!$certificateModel = $this->getCertificate($certificateCode)) {
                 throw new \Exception('Сертификат не найден');
             }
 
-            if  ($certificateModel->status === 'banned') {
+            if ($certificateModel->status === 'banned') {
                 throw new \Exception('Сертификат заблокирован');
             }
 
@@ -46,7 +47,7 @@ class Certificate extends Component
             throw new \Exception('Сертификат истёк');
         }
         $this->tmpVars = [];
-        return $this->session->set('certificateCode',$certificateModel->code);
+        return $this->session->set('certificateCode', $certificateModel->code);
     }
 
     public function getCode()
@@ -84,22 +85,23 @@ class Certificate extends Component
         return false;
     }
 
-    public function setElementMinusAmount($elementId,$amount)
+    public function setElementMinusAmount($elementId, $amount)
     {
         $model = CertificateToItem::findOne($elementId);
-        $model->amount = $model->amount - $amount;
         if ($amount > $model->amount) {
             $model->amount = 0;
+        } else {
+            $model->amount = $model->amount - $amount;
         }
-        if ($model->save(false)){
+
+        if ($model->save(false)) {
             if ($model->amount <= 0) {
                 return [
                     'status' => 'empty',
                 ];
-            }
-            else {
+            } else {
                 return [
-                  'status' => 'default',
+                    'status' => 'default',
                 ];
             }
         } else {
@@ -107,7 +109,18 @@ class Certificate extends Component
         }
     }
 
-    public function setCertificateUse($certificateId,$amount,$itemId,$orderId)
+    public function getCertificateItemBalance($itemId)
+    {
+        $model = CertificateToItem::findOne($itemId);
+
+        if ($model) {
+            return $model->amount;
+        }
+
+        return false;
+    }
+
+    public function setCertificateUse($certificateId, $amount, $itemId, $orderId)
     {
         $model = new CertificateUse;
         $model->certificate_id = $certificateId;
@@ -116,18 +129,34 @@ class Certificate extends Component
         $model->item_id = $itemId;
         $model->order_id = $orderId;
         if ($model->validate()) {
+
+            $result = $this->setElementMinusAmount($itemId, $amount);
+
+            $model->balance = $this->getCertificateItemBalance($itemId);
+
             $model->save();
-            $result = $this->setElementMinusAmount($itemId,$amount);
-            if ($result['status'] == 'empty') {
-                $this->setCertificateStatus($this->getCurrent(),$result['status']);
+
+            if ($result['status'] == 'empty' && $result['status']) {
+                $this->setCertificateStatus(CertificateModel::findOne($certificateId), $result['status']);
             }
-            if ($this->getCertificate($this->getCode())->employment == 'disposable') {
-                $this->setCertificateStatus($this->getCurrent(),'empty');
+            if (CertificateModel::findOne($certificateId)->employment == 'disposable') {
+
+                $this->setCertificateStatus(CertificateModel::findOne($certificateId), 'empty');
             }
             return true;
         } else {
             return $model->getErrors();
         }
+    }
+
+    public function getCertificateUsedSum($orderId)
+    {
+        return CertificateUse::find()->where(['order_id' => $orderId])->sum('amount');
+    }
+
+    public function getCertificateStatus($certificateCode)
+    {
+        return CertificateModel::find()->where(['code' => $certificateCode])->one()->status;
     }
 
     public function checkCertificateStatus($certificateCode)
@@ -140,14 +169,14 @@ class Certificate extends Component
         }
 
         if (strtotime($certificate->date_elapsed) < strtotime(date('Y:m:d H:m:s'))/* || $certificate->employment == 'disposable'*/) {
-                $this->setCertificateStatus($certificate,'elapsed');
+            $this->setCertificateStatus($certificate, 'elapsed');
             return false;
         } else {
             return true;
         }
     }
 
-    public function setCertificateStatus($certificate,$status)
+    public function setCertificateStatus($certificate, $status)
     {
         $certificate->status = $status;
 
@@ -157,14 +186,51 @@ class Certificate extends Component
 
     public function getTargetModels()
     {
-        if($code = $this->getCurrent()) {
+        if ($code = $this->getCurrent()) {
             return $code->targetModels;
         } else {
             return false;
         }
     }
-    
-    
+
+    public function getCertificateByOrderId($orderId)
+    {
+
+        $certificateUse = CertificateUse::find()->where(['order_id' => $orderId])->one();
+        if (!empty($certificateUse)) {
+            return CertificateModel::findOne($certificateUse->certificate_id);
+        } else {
+            return false;
+        }
+
+
+    }
+
+    public function rollbackCertificateUse($orderId)
+    {
+
+        $certificateUses = CertificateUse::find()->where(['order_id' => $orderId])->all();
+        foreach ($certificateUses as $certificateUse) {
+            $this->setCertificateBalance($certificateUse->item_id, $certificateUse->amount);
+        }
+
+    }
+
+    public function setCertificateBalance($itemId, $balance)
+    {
+        $certificateItem = CertificateToItem::find()->where(['id' => $itemId])->one();
+        $certificateItem->amount += (int)$balance;
+
+        $certificateItem->save(false);
+
+        $certificate = CertificateModel::findOne($certificateItem->certificate_id);
+
+        if ($this->getCertificateStatus($certificate->code) != 'active') {
+            $this->setCertificateStatus($certificate, 'active');
+        }
+
+    }
+
 
     public function clear()
     {
