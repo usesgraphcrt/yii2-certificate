@@ -88,6 +88,7 @@ class Certificate extends Component
     public function setElementMinusAmount($elementId, $amount)
     {
         $model = CertificateToItem::findOne($elementId);
+
         if ($amount > $model->amount) {
             $model->amount = 0;
         } else {
@@ -95,15 +96,7 @@ class Certificate extends Component
         }
 
         if ($model->save(false)) {
-            if ($model->amount <= 0) {
-                return [
-                    'status' => 'empty',
-                ];
-            } else {
-                return [
-                    'status' => 'default',
-                ];
-            }
+            return true;
         } else {
             return false;
         }
@@ -122,6 +115,9 @@ class Certificate extends Component
 
     public function setCertificateUse($certificateId, $amount, $itemId, $orderId)
     {
+
+        $certificate = CertificateModel::findOne($certificateId);
+
         $model = new CertificateUse;
         $model->certificate_id = $certificateId;
         $model->date = date('Y-m-d H:i:s');
@@ -130,17 +126,17 @@ class Certificate extends Component
         $model->order_id = $orderId;
         if ($model->validate()) {
 
-            $result = $this->setElementMinusAmount($itemId, $amount);
+            $this->setElementMinusAmount($itemId, $amount);
 
             $model->balance = $this->getCertificateItemBalance($itemId);
 
             $model->save();
 
-            if ($result['status'] == 'empty' && $result['status']) {
-                $this->setCertificateStatus(CertificateModel::findOne($certificateId), $result['status']);
+            if (!$this->checkCertificateBalance($certificate->code)) {
+                $this->setCertificateStatus(CertificateModel::findOne($certificateId), 'empty');
             }
-            if (CertificateModel::findOne($certificateId)->employment == 'disposable') {
 
+            if (CertificateModel::findOne($certificateId)->employment == 'disposable') {
                 $this->setCertificateStatus(CertificateModel::findOne($certificateId), 'empty');
             }
             return true;
@@ -168,7 +164,7 @@ class Certificate extends Component
             return true;
         }
 
-        if (strtotime($certificate->date_elapsed) < strtotime(date('Y:m:d H:m:s'))/* || $certificate->employment == 'disposable'*/) {
+        if (strtotime($certificate->date_elapsed) < strtotime(date('Y:m:d H:m:s'))) {
             $this->setCertificateStatus($certificate, 'elapsed');
             return false;
         } else {
