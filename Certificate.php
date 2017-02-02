@@ -15,7 +15,7 @@ class Certificate extends Component
     public $certificate = null;
     public $session = null;
     public $tmpVars = [];
-    public $delivery_type_id = null;
+    public $paymentTypeId = null;
 
     public function init()
     {

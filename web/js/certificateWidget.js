@@ -47,15 +47,21 @@ usesgraphcrt.certificate = {
                 if(json.result == 'success') {
                     $(form).find('input[type=text]').css({'border': '1px solid green'});
 
+                    if (json.paymentTypeId) {
+                        $(form).find('input[type=text]').data('payment-type-id',json.paymentTypeId);
+                        $(document).trigger('certificateUseSuccess',json.paymentTypeId);
+                    }
+
                     if(json.informer) {
                         $('.pistol88-cart-informer').replaceWith(json.informer);
                     }
+
                 }
                 else {
                     $(form).find('input[type=text]').css({'border': '1px solid red'});
                     console.log(json.errors);
                 }
-
+                
                 $(document).trigger("certificateEnter", json.code);
 
                 $(form).find('.certificate-discount').show().html(json.message);

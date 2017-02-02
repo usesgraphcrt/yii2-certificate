@@ -41,13 +41,15 @@ class CertificateUseController extends Controller
             else {
                 $newCost = null;
             }
+            
 
             return json_encode([
                 'code' => Html::encode($certificate),
                 'informer' => CartInformer::widget(),
                 'result' => 'success',
                 'newCost' => $newCost,
-                'message' => $message
+                'message' => $message,
+                'paymentTypeId' => \Yii::$app->certificate->paymentTypeId,            
             ]);
         }
         catch(\Exception $e) {

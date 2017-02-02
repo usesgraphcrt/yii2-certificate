@@ -19,7 +19,13 @@ use yii\widgets\ActiveForm;
     <?php } ?>
     <div class="input-group">
         <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>" value="<?= Yii::$app->request->csrfToken; ?>" />
-        <?=Html::input('text', 'certificate', yii::$app->certificate->getCode(), ['class' => 'form-control', 'placeholder' => 'Сертификат']) ?>
+        <?= Html::input('text', 'certificate', yii::$app->certificate->getCode(), [
+            'class' => 'form-control',
+            'placeholder' => 'Сертификат',
+            'data-role' => 'certificate-input',
+            'data-payment-type-id' => (yii::$app->certificate->getCode()) ? yii::$app->certificate->paymentTypeId : null
+            ])
+        ?>
         <span class="input-group-btn">
                 <?= Html::submitButton('<i class="glyphicon glyphicon-ok"></i>', ['class' => 'btn btn-success certificate-enter-btn']) ?>
                 <?= Html::submitButton('<i class="glyphicon glyphicon-remove"></i>', ['class' => 'btn btn-danger certificate-clear-btn']) ?>
