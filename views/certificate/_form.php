@@ -200,34 +200,33 @@ Asset::register($this);
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <?php if ($model->getTransactions()->all()) { ?>
+                    <h3>История использований</h3>
+                        <div class="table-responsive">
+                            <table id="scrolling-table" class="table table-bordered table-hover scrolling-table">
+                                <thead>
+                                <tr class="fixed">
+                                    <th>Дата использования</th>
+                                    <th><?= $type ?></th>
+                                    <th>Номер заказа</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach($model->getTransactions()->orderBy(['date' => SORT_DESC])->all() as $certificateUse) {?>
+                                    <tr>
+                                        <td><?= date('d.m.Y H:i:s',strtotime($certificateUse->date)) ?></td>
+                                        <td><?= $certificateUse->amount ?></td>
+                                        <td><a href="<?=Url::to(['/order/order/view', 'id' => $certificateUse->order_id]) ?>"><?= $certificateUse->order_id ?></a></td>
+                                    </tr>
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                <?php } ?>
+            </div>
         </div>
     </div>
     <?php ActiveForm::end(); ?>
-    <?php if ($model->getTransactions()->all()) { ?>
-        <input type="button" class="btn btn-primary" data-toggle="collapse" data-target="#toggleHistory" value="История использований">
-        <br>
-        <div id="toggleHistory" class="collapse">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Дата использования</th>
-                            <th><?= $type ?></th>
-                            <th>Номер заказа</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($model->getTransactions()->orderBy(['date' => SORT_DESC])->all() as $certificateUse) {?>
-                        <tr>
-                            <td><?= date('d.m.Y H:i:s',strtotime($certificateUse->date)) ?></td>
-                            <td><?= $certificateUse->amount ?></td>
-                            <td><a href="<?=Url::to(['/order/order/view', 'id' => $certificateUse->order_id]) ?>"><?= $certificateUse->order_id ?></a></td>
-                        </tr>
-                    <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    <?php } ?>
 </div>
 </div>
