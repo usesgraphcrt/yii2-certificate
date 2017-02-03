@@ -202,7 +202,7 @@ class Certificate extends Component
 
     }
 
-    public function clearUseHistory($orderId)
+    public function clearCertificateUseHistory($orderId)
     {
         return CertificateUse::deleteAll(['order_id' => $orderId]);
     }
@@ -215,7 +215,7 @@ class Certificate extends Component
             $this->setCertificateBalance($certificateUse->item_id, $certificateUse->amount);
         }
 
-        $this->clearUseHistory($orderId);
+        $this->clearCertificateUseHistory($orderId);
 
     }
 
