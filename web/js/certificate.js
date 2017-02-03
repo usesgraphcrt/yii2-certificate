@@ -56,45 +56,6 @@ usesgraphcrt.certificate = {
         return false;
     },
 
-    // bootstrapScrollTable: function (table) {
-    //     $('#' + table + ' tbody').css('overflow-y', 'scroll');
-    //     $('#' + table + ' tbody').css('position', 'absolute');
-    //
-    //     var hTable = parseInt($('#' + table).css('height'));
-    //     var hHead = parseInt($('#' + table + ' thead').css('height'));
-    //     var h = hTable - hHead;
-    //
-    //     $('#' + table + ' tbody').css('height', h);
-    //
-    //
-    //     var thead = parseInt($('#' + table + ' thead').css('width'));
-    //     var tbody = parseInt($('#' + table + ' tbody').css('width'));
-    //     var delta = tbody - thead;
-    //
-    //     $('#' + table + ' tbody').css('width', $('thead').css('width'));
-    //     var pos = $('#' + table + ' tbody').position();
-    //     var left = pos.left;
-    //     var top = pos.top;
-    //
-    //     $('#' + table + ' tbody').css('left', left - 0);
-    //     $('#' + table + ' tbody').css('top', top - 0);
-    //
-    //     var colCount = $('#' + table + ' thead tr:nth-child(1) th').length;
-    //     var rowCount = $('#' + table + ' tbody tr').length;
-    //
-    //     for (x = 1; x <= colCount; x++) {
-    //         var w = parseInt($('#' + table + ' thead tr:nth-child(1) th:nth-child(' + x + ')').css('width'));
-    //         if (x == colCount) {
-    //             w = w - 18;
-    //         }
-    //
-    //         for (y = 1; y <= rowCount; y++) {
-    //             var idx = '#' + table + ' tbody tr:nth-child(' + y + ') td:nth-child(' + x + ')';
-    //             $(idx).css('width', w);
-    //         }
-    //     }
-    // },
-
     deleteTargetItem: function (url, data, $block) {
         currentBlock = $block;
         $.ajax({
@@ -144,4 +105,3 @@ usesgraphcrt.certificate = {
 
 };
 usesgraphcrt.certificate.init();
-// usesgraphcrt.certificate.bootstrapScrollTable('scrolling-table');

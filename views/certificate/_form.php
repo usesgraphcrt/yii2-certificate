@@ -21,8 +21,8 @@ Asset::register($this);
                 <div class="row">
                     <div class="col-md-6">
                         <?php
-                        if($model->isNewRecord) {
-                            $code = strtoupper(base_convert(uniqid(rand(),true),5,36));
+                        if ($model->isNewRecord) {
+                            $code = strtoupper(base_convert(uniqid(rand(), true), 5, 36));
                             $params = ['value' => $code];
                             $date = '';
                             $type = 'Количество | Сумма';
@@ -31,7 +31,7 @@ Asset::register($this);
                             if (empty($model->date_elapsed)) {
                                 $date = '';
                             } else {
-                                $date = date('d.m.Y',strtotime($model->date_elapsed));
+                                $date = date('d.m.Y', strtotime($model->date_elapsed));
                             }
                             if ($model->type == 'item') {
                                 $type = 'Количество использований';
@@ -76,17 +76,17 @@ Asset::register($this);
                 <div class="row">
                     <div class="col-md-6">
                         <?= $form->field($model, 'status')->dropDownList([
-                                'active' => 'Активен',
-                                'elapsed' => 'Срок действия истек',
-                                'empty' => 'Израсходован',
-                                'banned' => 'Заблокирован',
-                            ],
+                            'active' => 'Активен',
+                            'elapsed' => 'Срок действия истек',
+                            'empty' => 'Израсходован',
+                            'banned' => 'Заблокирован',
+                        ],
                             [
                                 'options' => [
-                                        'active' => [
-                                            'selected ' => true
-                                        ]
+                                    'active' => [
+                                        'selected ' => true
                                     ]
+                                ]
                             ],
                             [
                                 'prompt' => 'Статус сертиификата:'
@@ -98,11 +98,11 @@ Asset::register($this);
                             'type' => DatePicker::TYPE_COMPONENT_PREPEND,
                             'options' => [
                                 'placeholder' => 'Дата истечения сертификата',
-                                'value' =>  $date,
+                                'value' => $date,
                             ],
                             'removeButton' => false,
                             'pluginOptions' => [
-                                'autoclose'=>true,
+                                'autoclose' => true,
                                 'format' => 'd.m.yyyy',
                             ],
                         ])->label('Дата истечения сертификата')->hint('Выберите дату истечения срока действия сертификата')
@@ -132,10 +132,11 @@ Asset::register($this);
             <div class="col-md-6 certificate-right-column">
                 <div class="row">
                     <?php foreach ($targetModelList as $modelName => $modelType){ ?>
-                    <div class="col-md-4"">
+                    <div class="col-md-4"
+                    ">
                     <?php
                     Modal::begin([
-                        'header' => '<h2>Сертификат для: "'.$modelName.'"</h2>',
+                        'header' => '<h2>Сертификат для: "' . $modelName . '"</h2>',
                         'size' => 'modal-lg',
                         'options' => [
                             'class' => 'product-modal',
@@ -148,7 +149,8 @@ Asset::register($this);
                         ]
                     ]);
                     ?>
-                    <iframe src="/certificate/tools/model-window?targetModel=<?= $modelName ?>" frameborder="0" style="width: 100%; height: 500px;">
+                    <iframe src="/certificate/tools/model-window?targetModel=<?= $modelName ?>" frameborder="0"
+                            style="width: 100%; height: 500px;">
                     </iframe>
                     <?php
                     Modal::end();
@@ -172,23 +174,25 @@ Asset::register($this);
                                 ?>
                                 <tr data-role="item">
                                     <td><label>
-                                            <?=$item_attr['name']?>
+                                            <?= $item_attr['name'] ?>
                                         </label>
                                     </td>
                                     <td>
-                                        <input class="form-control" type="text" data-role="product-model-amount" name="targetModels<?=$item_id?>"
-                                               data-name="<?=str_replace(['[','\\',']'],'',$item_id)?>"
-                                               value="<?=$item_attr['amount']?>" required>
+                                        <input class="form-control" type="text" data-role="product-model-amount"
+                                               name="targetModels<?= $item_id ?>"
+                                               data-name="<?= str_replace(['[', '\\', ']'], '', $item_id) ?>"
+                                               value="<?= $item_attr['amount'] ?>" required>
                                     </td>
                                     <td>
-                                            <span data-href="ajax-delete-target-item" class="btn glyphicon glyphicon-remove" style="color: red;"
+                                            <span data-href="ajax-delete-target-item"
+                                                  class="btn glyphicon glyphicon-remove" style="color: red;"
                                                   data-role="remove-target-item"
-                                                  data-target-model="<?=$item_attr['model'] ?>"
-                                                  data-target-model-id="<?=$item_attr['model_id'] ?>"></span>
+                                                  data-target-model="<?= $item_attr['model'] ?>"
+                                                  data-target-model-id="<?= $item_attr['model_id'] ?>"></span>
                                     </td>
 
                                 </tr>
-                            <?php    }
+                            <?php }
                         }
                     }
                     ?>
@@ -201,8 +205,9 @@ Asset::register($this);
                 </div>
             </div>
             <div class="row">
-                <?php if ($model->getTransactions()->all()) { ?>
-                    <h3>История использований</h3>
+                <div class="col-md-12">
+                    <?php if ($model->getTransactions()->all()) { ?>
+                        <h3>История использований</h3>
                         <div class="table-responsive">
                             <table id="scrolling-table" class="table table-bordered table-hover scrolling-table">
                                 <thead>
@@ -213,17 +218,20 @@ Asset::register($this);
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach($model->getTransactions()->orderBy(['date' => SORT_DESC])->all() as $certificateUse) {?>
+                                <?php foreach ($model->getTransactions()->orderBy(['date' => SORT_DESC])->all() as $certificateUse) { ?>
                                     <tr>
-                                        <td><?= date('d.m.Y H:i:s',strtotime($certificateUse->date)) ?></td>
+                                        <td><?= date('d.m.Y H:i:s', strtotime($certificateUse->date)) ?></td>
                                         <td><?= $certificateUse->amount ?></td>
-                                        <td><a href="<?=Url::to(['/order/order/view', 'id' => $certificateUse->order_id]) ?>"><?= $certificateUse->order_id ?></a></td>
+                                        <td>
+                                            <a href="<?= Url::to(['/order/order/view', 'id' => $certificateUse->order_id]) ?>"><?= $certificateUse->order_id ?></a>
+                                        </td>
                                     </tr>
                                 <?php } ?>
                                 </tbody>
                             </table>
                         </div>
-                <?php } ?>
+                    <?php } ?>
+                </div>
             </div>
         </div>
     </div>
