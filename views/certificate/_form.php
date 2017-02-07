@@ -149,7 +149,7 @@ Asset::register($this);
                         ]
                     ]);
                     ?>
-                    <iframe src="/certificate/tools/model-window?targetModel=<?= $modelName ?>" frameborder="0"
+                    <iframe src="<?= Url::to(['/certificate/tools/model-window', 'targetModel' => $modelName])  ?>" frameborder="0"
                             style="width: 100%; height: 500px;">
                     </iframe>
                     <?php
