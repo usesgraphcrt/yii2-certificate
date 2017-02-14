@@ -27,14 +27,18 @@ class Certificate extends Component
 
     public function enter($certificateCode)
     {
+
+        if (!$this->getCertificate($certificateCode)) {
+            throw new \Exception('Сертификат не найден');
+        }
+
         if (!$this->checkCertificateBalance($certificateCode)) {
             throw new \Exception('Сертификат исчерпан');
         }
 
         if ($this->checkCertificateStatus($certificateCode)) {
-            if (!$certificateModel = $this->getCertificate($certificateCode)) {
-                throw new \Exception('Сертификат не найден');
-            }
+
+            $certificateModel = $this->getCertificate($certificateCode);
 
             if ($certificateModel->status === 'banned') {
                 throw new \Exception('Сертификат заблокирован');

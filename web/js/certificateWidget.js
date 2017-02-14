@@ -42,6 +42,10 @@ usesgraphcrt.certificate = {
         var form = $(this).parents('form');
         var data = $(form).serialize();
 
+        if (form.find('[data-role=certificate-input]').val() == '') {
+            return false;
+        }
+
         jQuery.post($(form).attr('action'), data,
             function(json) {
                 if(json.result == 'success') {
