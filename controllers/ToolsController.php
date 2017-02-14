@@ -3,10 +3,25 @@ namespace usesgraphcrt\certificate\controllers;
 
 use yii;
 use yii\web\Controller;
-//use yii\filters\AccessControl;
+use yii\filters\AccessControl;
 
 class ToolsController  extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['model-window'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => $this->module->adminRoles,
+                    ]
+                ]
+            ],
+        ];
+    }
 
     public function actionModelWindow($targetModel = null)
     {
@@ -19,7 +34,7 @@ class ToolsController  extends Controller
 
         $dataProvider = $searchModel->search(yii::$app->request->queryParams);
 
-        return $this->render('model-window', [
+        return $this->renderAjax('model-window', [
             'searchModel' => $searchModel,
             'model' => $model,
             'dataProvider' => $dataProvider,

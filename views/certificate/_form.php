@@ -18,6 +18,10 @@ Asset::register($this);
         <?php $form = ActiveForm::begin(); ?>
         <div class="row">
             <div class="col-md-6">
+                <div class="form-group">
+                    <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'data-role' => 'send-form']) ?>
+                    <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success hidden' : 'btn btn-primary hidden', 'data-role' => 'send-form2']) ?>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <?php
@@ -132,8 +136,7 @@ Asset::register($this);
             <div class="col-md-6 certificate-right-column">
                 <div class="row">
                     <?php foreach ($targetModelList as $modelName => $modelType){ ?>
-                    <div class="col-md-4"
-                    ">
+                    <div class="col-md-4">
                     <?php
                     Modal::begin([
                         'header' => '<h2>Сертификат для: "' . $modelName . '"</h2>',

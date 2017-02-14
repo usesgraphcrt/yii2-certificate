@@ -1,6 +1,6 @@
 <?php
 
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 $this->registerJs("
 $('[data-role=add-model]').on('click', function() {
@@ -17,30 +17,35 @@ $('[data-role=add-model]').on('click', function() {
     });");
 ?>
 <div class="product-window">
-    <input type="hidden" value="<?=$targetModel?>" data-role="target-model">
-    <div class="btn btn-primary pull-right" data-role="add-model" data-target-model-id="0" data-target-model-name="<?= $targetModelTitle ?>">На всю группу</div>
-    <br>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            [
-                'attribute' => 'name',
-                'content' => function($model) {
-                    return $model->name;
-                }
-            ],
-            [
-                'format' => 'raw',
-                'content' => function ($model) {
-                    return '<div class="btn btn-default" 
+    <div class="row">
+        <div class="col-sm-12">
+            <input type="hidden" value="<?=$targetModel?>" data-role="target-model">
+            <div class="btn btn-primary pull-right" data-role="add-model" data-target-model-id="0" data-target-model-name="<?= $targetModelTitle ?>">На всю группу</div>
+            <br>
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+                    [
+                        'attribute' => 'name',
+                        'content' => function($model) {
+                            return $model->name;
+                        }
+                    ],
+                    [
+                        'format' => 'raw',
+                        'content' => function ($model) {
+                            return '<div class="btn btn-default" 
                         data-role="add-model"
                         data-target-model-name="'.$model->name.'"
                         data-target-model-id="'.$model->id.'">
                         Добавить</div>';
-                }
-            ]
-        ],
-    ]); ?>
+                        }
+                    ]
+                ],
+                'pjax' => true,
+            ]); ?>
+        </div>
+    </div>
 </div>

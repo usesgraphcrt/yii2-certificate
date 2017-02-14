@@ -46,7 +46,7 @@
     overflow-x: hidden;
 }
 
-.scrolling-table tbody td, thead th {
+.scrolling-table tbody td, .scrolling-table thead th {
     width: 33%;
     float: left;
 }

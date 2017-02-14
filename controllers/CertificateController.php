@@ -8,6 +8,7 @@ use usesgraphcrt\certificate\models\Certificate;
 use usesgraphcrt\certificate\models\search\CertificateSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 class CertificateController extends Controller
@@ -28,6 +29,15 @@ class CertificateController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => $this->module->adminRoles,
+                    ]
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -93,6 +103,44 @@ class CertificateController extends Controller
                 'clients' => $clients,
             ]);
         }
+    }
+
+    public function actionCreateWidget()
+    {
+        $model = new Certificate();
+
+        $json = [];
+
+
+        $model->owner_id = \Yii::$app->user->id;
+        $model->created_at = date('Y-m-d H:i:s');
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            if (strlen($model->date_elapsed) > 0) {
+                $model->date_elapsed = date('Y-m-d H:i:s', strtotime($model->date_elapsed));
+            } else {
+                $model->date_elapsed = null;
+            }
+
+            $targets = Yii::$app->request->post();
+
+            if ($model->save()) {
+                if (isset($targets['targetModels'])) {
+                    $this->saveCertificateToModel($targets['targetModels'], $model->id);
+                }
+
+                $json['result'] = 'success';
+                $json['certificate'] = $model->code;
+                
+            } else {
+                $json['result'] = 'fail';
+                $json['errors'] = current($model->getFirstErrors());
+            }
+
+        }
+
+        return json_encode($json);
     }
 
     public function actionUpdate($id)
