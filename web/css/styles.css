@@ -1,5 +1,6 @@
 .certificate-enter {
     width: 270px;
+    max-width: 260px;
 }
 
 .certificate-discount {
