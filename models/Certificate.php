@@ -45,7 +45,12 @@ class Certificate extends \yii\db\ActiveRecord
         $userModel = \Yii::$app->getModule('certificate')->clientModel;
         $userModel = new $userModel;
         $user = $userModel::findOne(['id'=> $this->target_user]);
-        return $user->name;
+        
+        if($user = $userModel::findOne(['id'=> $this->target_user])) {
+            return $user->name;
+        } else {
+            return null;
+        }
     }
 
     public function getTargetModels()
