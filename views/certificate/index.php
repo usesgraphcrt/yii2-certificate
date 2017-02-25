@@ -93,8 +93,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'filter' => \yii\helpers\ArrayHelper::map($targetUser::find()->all(),'id','name'),
                 'filter' => Select2::widget([
                     'name' => 'CertificateCertificateSearch[target_user]',
+                    'size' => Select2::MEDIUM,
                     'data'  => ['' => 'Все',ArrayHelper::map($targetUser::find()->all(), 'id', 'name')],
                     ]),
+                'contentOptions'=>['style'=>'width: 200px;'],
                 'value' => function($model){
                     if  ($model->target_user) {
                         return $model->getTargetUser();
