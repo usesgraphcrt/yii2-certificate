@@ -3,7 +3,7 @@
 use kartik\grid\GridView;
 
 $this->registerJs("
-$('[data-role=add-model]').on('click', function() {
+$(document).on('click','[data-role=add-model]', function() {
         var id = $(this).data('target-model-id');
         var name = $(this).data('target-model-name');
         var targetModel = $(document).find('[data-role=target-model]').val();
