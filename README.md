@@ -32,11 +32,11 @@ You should add module to your config:
 'modules' => [
         ...
         'certificate' => [
-                    'class' => \usesgraphcrt\certificate\Module::className(),
-                    'targetModelList' => [
-                    //list models for certification
-                    ]
-                ],
+            'class' => \usesgraphcrt\certificate\Module::className(),
+            'targetModelList' => [
+            //list models for certification
+            ]
+        ],
     ],
 ```
 
