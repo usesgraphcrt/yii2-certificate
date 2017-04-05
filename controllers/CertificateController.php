@@ -51,8 +51,10 @@ class CertificateController extends Controller
     {
         $searchModel = new CertificateSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $targetUser = \Yii::$app->getModule('certificate')->clientModel;
-        $targetUser = new $targetUser;
+        if(!$targetUser = \Yii::$app->getModule('certificate')->clientModel) {
+            $targetUser = false;
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -72,8 +74,11 @@ class CertificateController extends Controller
         $model = new Certificate();
         $targetModelList = [];
 
-        $clients = $this->module->clientModel;
-        $clients = $clients::find()->all();
+        if($clients = $this->module->clientModel) {
+            $clients = $clients::find()->all();
+        } else {
+            $clients = [];
+        }
 
         if ($this->module->targetModelList) {
             $targetModelList = $this->module->targetModelList;
@@ -151,8 +156,11 @@ class CertificateController extends Controller
         $items = [];
         $title = false;
 
-        $clients = $this->module->clientModel;
-        $clients = $clients::find()->all();
+        if($clients = $this->module->clientModel) {
+            $clients = $clients::find()->all();
+        } else {
+            $clients = [];
+        }
 
         if ($this->module->targetModelList) {
             $targetModelList = $this->module->targetModelList;

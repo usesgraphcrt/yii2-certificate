@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => Select2::widget([
                     'name' => 'CertificateCertificateSearch[target_user]',
                     'size' => Select2::MEDIUM,
-                    'data'  => ['' => 'Все',ArrayHelper::map($targetUser::find()->all(), 'id', 'name')],
+                    'data'  => ['' => 'Все', $targetUser ? ArrayHelper::map($targetUser::find()->all(), 'id', 'name') : null],
                     ]),
                 'contentOptions'=>['style'=>'width: 200px;'],
                 'value' => function($model){
